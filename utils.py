@@ -31,25 +31,24 @@ class Uploader:
         ready_tracks = list()
         
         for track in tracks:
-            result = self.sp.search(q = 'track:' + track, type = 'track')
+            result = self.sp.search(q = 'track:' + track.get('track'), type = 'track')
             
-            try:
-                _ = result['tracks']['items']
-                    
-                for elem in _:
-                    if elem.get('name').replace(' ', '').lower() == track.replace(' ', '').lower():
+            _ = result['tracks']['items']
+                
+            for elem in _:
+                if elem.get('name').replace(' ', '').lower() == track.get('track').replace(' ', '').lower():
+                    if elem['album']['artists'][0].get('name').lower() in track.get('artist').lower():
                         ready_tracks.append(elem.get('id'))
                         
                         if self.debug_mode:
                             print(f'Successfuly added {track} [+]')
-                            
+                        
                         break
-                    else:
-                        if self.debug_mode:
-                            print(f'Spotify has not track named {track} [-]')
-            except:
-                if self.debug_mode:
-                    print(f'Spotify has not track named {track} [-]')
+                else:
+                    print(elem['album']['artists'][0].get('name'), '|', track.get('artist'), file = open('invalid.txt', 'a', encoding='utf-8'))
+                    
+                    if self.debug_mode:
+                        print(f'Spotify has not track named {track} [-]')
                 
         return ready_tracks
 
@@ -65,7 +64,10 @@ class Uploader:
                 
         for i in range(len(temp)):
             if '–' in temp[i]:
-                tracks.append(temp[i - 1])
+                tracks.append({
+                    'artist' : temp[i + 1],
+                    'track' : temp[i - 1]
+                })
                 
         return tracks
     
@@ -79,6 +81,8 @@ class Uploader:
             if playlist.get('name') == playlist_name:
                     
                self.sp.playlist_add_items(playlist.get('id'), tracks, position=0)
+               
+        print(len(tracks))
                
     def clear_playlist(self, playlist_name):
         playlists = self.sp.current_user_playlists().get('items')
