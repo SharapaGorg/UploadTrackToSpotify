@@ -7,6 +7,6 @@ CORS(app)
 @app.route('/spotipy/')
 def redirect():
     
-    return 'DEATh'
+    return 'Success redirecting'
 
 app.run(debug=True)

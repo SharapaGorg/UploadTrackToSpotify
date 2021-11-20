@@ -46,8 +46,6 @@ class Uploader:
                         
                         break
                 else:
-                    print(elem['album']['artists'][0].get('name'), '|', track.get('artist'), file = open('invalid.txt', 'a', encoding='utf-8'))
-                    
                     if self.debug_mode:
                         print(f'Spotify has not track named {track} [-]')
                 
@@ -69,6 +67,7 @@ class Uploader:
                     'artist' : temp[i + 1],
                     'track' : temp[i - 1]
                 })
+                
                 
         return tracks
     

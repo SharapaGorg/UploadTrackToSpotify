@@ -2,3 +2,4 @@ config.py
 test.json
 app.log
 .cache
+test.py
