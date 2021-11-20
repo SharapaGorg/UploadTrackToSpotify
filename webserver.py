@@ -5,8 +5,7 @@ app = Flask(__name__)
 CORS(app)
 
 @app.route('/spotipy/')
-def redirect(var):
-    # print(var, file = open('.log', 'w'))
+def redirect():
     
     return 'DEATh'
 
