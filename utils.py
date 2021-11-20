@@ -91,6 +91,3 @@ class Uploader:
                     tracks_in_this_playlist.append(elem['track'].get('id'))
                     
                 self.sp.playlist_remove_all_occurrences_of_items(playlist.get('id'), tracks_in_this_playlist)
-
-# for track in upload_tracks_from_vk('https://vk.com/music/playlist/170735510_38_018f4a24a2643650f3'):
-    # print(track)
