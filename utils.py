@@ -5,6 +5,7 @@ from spotipy.client import Spotify
 from spotipy.oauth2 import SpotifyOAuth
 from json import loads
 from accessify import protected
+import LogManager
 
 class Uploader:
     def __init__(self, 
@@ -71,7 +72,7 @@ class Uploader:
                 
         return tracks
     
-    def upload_tracks_from_vk(self, uri, playlist_name):
+    def upload_tracks_from_vk(self, uri, playlist_name) -> int:
         tracks_titles = self.get_titles_from_vk_playlist(uri)
         tracks = self.get_tracks_id(tracks_titles)
                 
@@ -82,16 +83,18 @@ class Uploader:
                     
                self.sp.playlist_add_items(playlist.get('id'), tracks, position=0)
                
-        print(len(tracks))
+        return len(tracks)
                
-    def clear_playlist(self, playlist_name):
+    def clear_playlist(self, playlist_name) -> int:
         playlists = self.sp.current_user_playlists().get('items')
+        tracks_in_this_playlist = list()
         
         for playlist in playlists:
             playlists = self.sp.current_user_playlists().get('items')
             if playlist.get('name') == playlist_name:
-                tracks_in_this_playlist = list()
                 for elem in loads(requests.get(playlist['tracks']['href'] + '?access_token=' + self.cache().get('access_token')).text)['items']:
                     tracks_in_this_playlist.append(elem['track'].get('id'))
                     
                 self.sp.playlist_remove_all_occurrences_of_items(playlist.get('id'), tracks_in_this_playlist)
+                
+        return len(tracks_in_this_playlist)
